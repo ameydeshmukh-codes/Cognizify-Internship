@@ -27,7 +27,7 @@ public static double celsiusToFahrenheit(double celsius) {
     }
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-         System.out.println("Temperature Converter")
+         System.out.println("Temperature Converter");
 
         // Convert Celsius to Fahrenheit
 
@@ -72,5 +72,6 @@ public static double celsiusToFahrenheit(double celsius) {
     scanner.close(); 
    
     }
+}
 
     
