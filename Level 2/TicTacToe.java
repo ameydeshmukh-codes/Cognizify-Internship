@@ -1,15 +1,7 @@
 
 import java.util.Scanner;
 public class TicTacToe {
-    /*Implement a two-player tic-tac-toe
-game. Display the game board and prompt each
-player to enter their moves. Check for a winning
-condition or a draw after each move, and display
-the result accordingly. Allow the players to play
-multiple rounds if desired.
-Skills: Arrays or matrices, loops, conditional
-statements */
-
+   
 static final int SIZE = 3;
     static char[][] board = new char[SIZE][SIZE];
     static char currentPlayer = 'X';
@@ -18,6 +10,7 @@ static final int SIZE = 3;
         method();
     }
     static void initializeBoard() {
+        currentPlayer = 'X';
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 board[i][j] = ' ';
