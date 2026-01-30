@@ -1,107 +1,127 @@
 
 import java.util.Scanner;
 public class TicTacToe {
-   
-static final int SIZE = 3;
-    static char[][] board = new char[SIZE][SIZE];
-    static char currentPlayer = 'X';
+    
+    static final int BOARD_SIZE = 3;
+    static char[][] gameBoard = new char[BOARD_SIZE][BOARD_SIZE];
+    static char activePlayer = 'X';
 
     public static void main(String[] args) {
-        method();
+        startGameLoop();
     }
-    static void initializeBoard() {
-        currentPlayer = 'X';
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                board[i][j] = ' ';
+
+    static void resetGame() {
+        // Reset the player to X so the winner of the last game doesn't start
+        activePlayer = 'X'; 
+        
+        // Clear the board
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                gameBoard[i][j] = ' ';
             }
         }
     }
-    static void printBoard() {
 
-        System.out.println("Current Board:");
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                System.out.print(" " + board[i][j] + " ");
-
-                if (j < SIZE - 1) System.out.print("|");
+    static void displayBoard() {
+        System.out.println("\n--- Current Game ---");
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                System.out.print(" " + gameBoard[i][j] + " ");
+                if (j < BOARD_SIZE - 1) System.out.print("|");
             }
             System.out.println();
-            if (i < SIZE - 1) {
+            if (i < BOARD_SIZE - 1) {
                 System.out.println("---|---|---");
             }
         }
+        System.out.println();
     }
-    static boolean isWin() {
-        // Check rows and columns
-        for (int i = 0; i < SIZE; i++) {
-            if ((board[i][0] == currentPlayer && board[i][1] == currentPlayer && board[i][2] == currentPlayer) ||
-                (board[0][i] == currentPlayer && board[1][i] == currentPlayer && board[2][i] == currentPlayer)) {
-                return true;
-            }
+
+    static boolean checkWinner() {
+        // Scan rows and cols
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            boolean rowWin = (gameBoard[i][0] == activePlayer && gameBoard[i][1] == activePlayer && gameBoard[i][2] == activePlayer);
+            boolean colWin = (gameBoard[0][i] == activePlayer && gameBoard[1][i] == activePlayer && gameBoard[2][i] == activePlayer);
+            
+            if (rowWin || colWin) return true;
         }
-        // Check diagonals
-        if ((board[0][0] == currentPlayer && board[1][1] == currentPlayer && board[2][2] == currentPlayer) ||
-            (board[0][2] == currentPlayer && board[1][1] == currentPlayer && board[2][0] == currentPlayer)) {
-            return true;
-        }
-        return false;
+        // Scan diagonals
+        boolean d1 = (gameBoard[0][0] == activePlayer && gameBoard[1][1] == activePlayer && gameBoard[2][2] == activePlayer);
+        boolean d2 = (gameBoard[0][2] == activePlayer && gameBoard[1][1] == activePlayer && gameBoard[2][0] == activePlayer);
+        
+        return d1 || d2;
     }
-    static boolean isDraw() {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if (board[i][j] == ' ') {
-                    return false;
-                }
+
+    static boolean checkDraw() {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (gameBoard[i][j] == ' ') return false; // Found an empty spot, keep playing
             }
         }
         return true;
     }
-    static void playGame(Scanner scanner) {
-        boolean gameEnded = false;
-        while (!gameEnded) {
-            printBoard();
-            System.out.print("Player " + currentPlayer + ", enter your move (row and column): ");
-            int row = scanner.nextInt()-1;
-            int col = scanner.nextInt()-1;
-            scanner.nextLine(); // Consume newline
 
-            if (row < 0 || row >= SIZE || col < 0 || col >= SIZE || board[row][col] != ' ') {
-                System.out.println("Invalid move. Try again.");
-                continue;
+    static void processTurn(Scanner input) {
+        boolean matchOver = false;
+
+        while (!matchOver) {
+            displayBoard();
+            int r = -1;
+            int c = -1;
+            boolean validMove = false;
+
+            // Robust Input Validation Loop
+            while (!validMove) {
+                System.out.print("Player " + activePlayer + ", choose row (1-3) and column (1-3): ");
+                
+                if (input.hasNextInt()) {
+                    r = input.nextInt() - 1; // Convert 1-3 to 0-2
+                    c = input.nextInt() - 1;
+                    
+                    // Logic check
+                    if (r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE && gameBoard[r][c] == ' ') {
+                        validMove = true;
+                    } else {
+                        System.out.println("Error: Spot taken or out of bounds.");
+                    }
+                } else {
+                    System.out.println("Error: Please enter numbers only.");
+                    input.next(); // Clear bad input
+                }
             }
+            input.nextLine(); // Clear newline buffer
 
-            board[row][col] = currentPlayer;
+            // Apply Move
+            gameBoard[r][c] = activePlayer;
 
-            if (isWin()) {
-                printBoard();
-                System.out.println("Player " + currentPlayer + " wins!");
-                gameEnded = true;
-            } else if (isDraw()) {
-                printBoard();
-                System.out.println("The game is a draw!");
-                gameEnded = true;
+            // Check Status
+            if (checkWinner()) {
+                displayBoard();
+                System.out.println("*** Player " + activePlayer + " Wins! ***");
+                matchOver = true;
+            } else if (checkDraw()) {
+                displayBoard();
+                System.out.println("It's a Draw!");
+                matchOver = true;
             } else {
-                currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+                // Switch Turns
+                activePlayer = (activePlayer == 'X') ? 'O' : 'X';
             }
         }
     }
-    static void method() {
 
-        Scanner scanner = new Scanner(System.in);
-        boolean playAgain;
+    static void startGameLoop() {
+        Scanner input = new Scanner(System.in);
+        String response;
 
         do {
-            initializeBoard();
-            playGame(scanner);
-            System.out.print("Do you want to play again? (y/n): ");
-            playAgain = scanner.nextLine().equalsIgnoreCase("y");
-        } while (playAgain);
+            resetGame();
+            processTurn(input);
+            System.out.print("Play another round? (y/n): ");
+            response = input.nextLine();
+        } while (response.equalsIgnoreCase("y"));
 
-        scanner.close();    
+        System.out.println("Thanks for playing!");
+        input.close();
     }
-
-
-
-
 }
