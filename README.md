@@ -45,25 +45,6 @@ Focused on complex logic, 2D arrays, and File I/O.
 
 ---
 
-## 🚀 How to Run
-
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/ameydeshmukh-codes/Cognizify-Internship.git](https://github.com/ameydeshmukh-codes/Cognizify-Internship.git)
-    ```
-
-2.  **Navigate to the project directory:**
-    ```bash
-    cd Cognifyz-Internship/Level\ 2
-    ```
-
-3.  **Compile and Run (Example: Tic-Tac-Toe):**
-    ```bash
-    javac TicTacToe.java
-    java TicTacToe
-    ```
-
----
 
 ## 🛠️ Tech Stack
 * **Language:** Java (JDK 8+)

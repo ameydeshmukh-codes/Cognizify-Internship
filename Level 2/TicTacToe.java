@@ -11,7 +11,7 @@ public class TicTacToe {
     }
 
     static void resetGame() {
-        // Reset the player to X so the winner of the last game doesn't start
+
         activePlayer = 'X'; 
         
         // Clear the board
